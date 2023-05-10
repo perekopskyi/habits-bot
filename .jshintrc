@@ -1,0 +1,14 @@
+{
+  "asi": true,
+  "camelcase": true, 
+  "undef": true, 
+  "quotmark": true, 
+  "maxlen": 80, 
+  "trailing": true,
+  "curly": true,
+  "strict": true,
+  "document": true,
+  "devel": true,
+  "esversion": 8,
+  "node": true
+}
