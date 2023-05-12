@@ -6,4 +6,6 @@ const TIME = '00 20 * * *' // '00 20 * * *'
 schedule.scheduleJob(TIME, sendReminder)
 
 const BACKUP_TIME = '00 01 * * *'
-schedule.scheduleJob(BACKUP_TIME, saveFirebaseDataToJson(`./dist/database`))
+schedule.scheduleJob(BACKUP_TIME, () =>
+  saveFirebaseDataToJson(`./dist/database`)
+)

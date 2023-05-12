@@ -5,12 +5,15 @@ export const getContextData = (ctx: Context) => {
 
   if (callbackQuery) {
     return {
-      userId: callbackQuery.from.id,
+      userId: callbackQuery && callbackQuery.from.id,
     }
   }
 
+  const message =
+    ctx.message && ctx.message.text && ctx.message.text.toLowerCase()
+
   return {
-    message: ctx.message.text.toLowerCase(),
-    userId: ctx.message?.from.id,
+    message,
+    userId: ctx.message && ctx.message.from.id,
   }
 }

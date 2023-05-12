@@ -6,7 +6,7 @@ import { postChat, removeChat } from './database/firebase'
 import { profanityFilter } from './features/profanityFilter'
 import { sendReminder } from './features/sendReminder'
 import { checkIsLeftFromChat, checkIsNewChat, getAllWords } from './utils'
-import { menuDrinksMiddleware } from './features/drink'
+import { menuDrinksMiddleware } from './features/drinks/drink'
 
 // init translation
 i18next.use(backend).init({
@@ -31,11 +31,14 @@ bot.use(menuDrinksMiddleware)
 const greetings = getAllWords('greeting')
 const greetingsRegex = new RegExp(`^(${greetings})$`, 'i')
 bot.hears(greetingsRegex, (ctx: Context) => {
-  ctx.reply(`Здоров, ${ctx.message.from.first_name}!`)
+  ctx.reply(
+    `Здоров, ${(ctx.message && ctx.message.from.first_name) || ' пивозавр'}!`
+  )
 })
 
 const startConversation = async (ctx: Context) => {
-  const chatId = ctx.update.message.chat.id
+  const chatId = ctx.update.message && ctx.update.message.chat.id
+  if (!chatId) return
   await postChat({ chatId })
   menuDrinksMiddleware.replyToContext(ctx)
 }
@@ -58,7 +61,8 @@ bot.on('message', async (ctx: Context) => {
   const isNewChat = checkIsNewChat(ctx)
   if (isNewChat) {
     // Add chatId to db
-    const chatId = ctx.update.message.chat.id
+    const chatId = ctx.update.message && ctx.update.message.chat.id
+    if (!chatId) return
     await postChat({ chatId })
 
     // Make greeting
@@ -85,18 +89,20 @@ bot.on('message', async (ctx: Context) => {
   // Removing from chat
   const isLeftFromChat = checkIsLeftFromChat(ctx)
   if (isLeftFromChat) {
-    const chatId = ctx.update.message.chat.id
+    const chatId = ctx.update.message && ctx.update.message.chat.id
+    if (!chatId) return
     return removeChat({ chatId })
   }
 
-  const createdChat = ctx.update.message.group_chat_created
+  const createdChat =
+    ctx.update.message && ctx.update.message.group_chat_created
   console.log('🚀 ~> createdChat:', createdChat)
 
   // Check profanity
   const answer = await profanityFilter(ctx)
   if (answer) {
     return ctx.reply(`Сам ти ${answer}! Тихіше будь`, {
-      reply_to_message_id: ctx.msg.message_id,
+      reply_to_message_id: ctx.msg && ctx.msg.message_id,
     })
   }
 
@@ -108,14 +114,17 @@ bot.on('message', async (ctx: Context) => {
   }
 })
 
-bot.on('callback_query:data', async (ctx, next) => {
+bot.on('callback_query:data', async (ctx: Context, next) => {
+  if (!ctx.callbackQuery) return
   console.log('another callbackQuery happened', ctx.callbackQuery.data)
 
   if (ctx.callbackQuery.data === 'new_record') {
     // Remove prev. message
-    const chatId = ctx.update.callback_query.message.chat.id
-    const messageId = ctx.update.callback_query.message.message_id
-    bot.api.deleteMessage(chatId, messageId)
+    const chatId =
+      ctx.callbackQuery.message && ctx.callbackQuery.message.chat.id
+    const messageId =
+      ctx.callbackQuery.message && ctx.callbackQuery.message.message_id
+    if (chatId && messageId) bot.api.deleteMessage(chatId, messageId)
 
     return menuDrinksMiddleware.replyToContext(ctx)
   }

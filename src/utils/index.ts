@@ -18,7 +18,7 @@ export const checkIsLeftFromChat = (ctx: Context): boolean => {
 }
 
 const getCallbackData = (ctx: Context): string =>
-  ctx.update.callback_query.data || 'Дивна відповідь'
+  (ctx.callbackQuery && ctx.callbackQuery.data) || 'Дивна відповідь'
 
 export const createAnswer = async (ctx: Context) => {
   const data = getCallbackData(ctx)
@@ -32,7 +32,9 @@ export const createAnswer = async (ctx: Context) => {
     answer,
     date,
   }
-  await writeDataToDb(userId, record)
+
+  // Save to DB
+  await writeDataToDb(userId as number, record)
   return createMessage(record)
 }
 
@@ -46,9 +48,11 @@ const formatDate = (date: Date): string => {
   return `${day}-${month}-${year}`
 }
 
-export const getAllWords = (key: string) => {
+export const getAllWords = (key: string): string => {
   const languages = Object.keys(i18next.store.data)
   return languages
-    .map(lang => i18next.store.data[lang].translation[key].join('|'))
+    .map((lang: string) =>
+      (i18next.store.data[lang] as any).translation[key].join('|')
+    )
     .join('|')
 }

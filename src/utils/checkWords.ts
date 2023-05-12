@@ -1,6 +1,8 @@
 const PROFANITY_LIST: string[] = ['лох', 'мудак', 'урод', 'пивозавр', 'loh']
 
-export const checkForProfanity = (inputString: string): string | null => {
+export const checkForProfanity = (
+  inputString: string | undefined
+): string | null => {
   if (!inputString) return null
 
   for (const word of PROFANITY_LIST) {

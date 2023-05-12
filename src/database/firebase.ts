@@ -34,14 +34,21 @@ export const firebase = initializeApp(firebaseConfig)
 const db = getDatabase(firebase)
 const dbRef = ref(db)
 
-export const writeDataToDb = (userId: number, record: RecordModel) => {
-  // Get a key for a new record.
-  const newRecordKey = push(child(dbRef, 'records')).key
+export const writeDataToDb = async (userId: number, record: RecordModel) => {
+  // Check if record exists
+  const response = await get(child(dbRef, `/records/${userId}`))
+  const userRecords = response.exists() && response.val()
+  const existsRecord =
+    userRecords &&
+    Object.values(userRecords).find(
+      ({ answer, date }: any) => date === record.date
+    )
 
-  // Write the new post's data simultaneously in the posts list and the user's post list.
-  const updates = {}
-  updates[`/records/${userId}/` + newRecordKey] = record
-
+  // Write the data
+  const updates: any = {
+    [`/records/${userId}/${existsRecord ? existsRecord.date : record.date}`]:
+      record.answer,
+  }
   return update(dbRef, updates)
 }
 
@@ -63,7 +70,7 @@ export const postChat = async (chat: ChatModel) => {
 export const removeChat = async (chat: ChatModel) => {
   const snapshot = await get(child(dbRef, `chats`))
   const updates: ChatModel[] = snapshot.exists()
-    ? snapshot.val().filter(item => item.chatId !== chat.chatId)
+    ? snapshot.val().filter((item: ChatModel) => item.chatId !== chat.chatId)
     : []
   return update(dbRef, { '/chats': updates })
 }

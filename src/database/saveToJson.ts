@@ -1,7 +1,7 @@
 import * as fs from 'fs'
 import { getAllDBData } from './firebase'
 
-export const saveFirebaseDataToJson = async (path: string) => {
+export const saveFirebaseDataToJson = async (path: string): Promise<void> => {
   try {
     const data = await getAllDBData()
 

@@ -16,4 +16,10 @@ export const BUTTONS = {
     title: 'Так',
     value: 'yes',
   },
+  NEW_RECORD: {
+    title: 'Новий запис',
+    value: 'new_record',
+  },
 }
+
+export const NEW_RECORD_ADDED = 'Новий запис створено'

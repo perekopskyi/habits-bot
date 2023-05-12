@@ -1,4 +1,5 @@
 {
+  "extends": "@tsconfig/node16/tsconfig.json",
   "compilerOptions": {
     "module": "CommonJS",
     "esModuleInterop": true,
@@ -7,6 +8,6 @@
     "outDir": "./dist",
     "rootDir": "./src"
   },
-  "include": ["./src/**/*"],
+  "include": ["./src/**/*", "./src/locales/**/translation.json"],
   "exclude": ["node_modules", "**/*.spec.ts"]
 }
