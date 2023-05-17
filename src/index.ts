@@ -6,7 +6,7 @@ import { postChat, removeChat } from './database/firebase'
 import { profanityFilter } from './features/profanityFilter'
 import { sendReminder } from './features/sendReminder'
 import { menuDrinksMiddleware } from './features/drinks/drink'
-import { updateCalendar } from './features/drinks/otherDay'
+// import { updateCalendar } from './features/drinks/otherDay'
 import {
   checkIsLeftFromChat,
   checkIsNewChat,
@@ -143,10 +143,10 @@ bot.on('callback_query:data', async (ctx: Context, next) => {
       // Remove prev. message
       removePrevMessage(ctx)
       return menuDrinksMiddleware.replyToContext(ctx)
-    case 'prev':
-    case 'next':
-      updateCalendar(ctx)
-      return menuDrinksMiddleware.replyToContext(ctx, '/new_record/choose_day/')
+    // case 'prev':
+    // case 'next':
+    //   updateCalendar(ctx)
+    //   return menuDrinksMiddleware.replyToContext(ctx, '/new_record/choose_day/')
     default:
       return next()
   }
