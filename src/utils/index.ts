@@ -20,11 +20,10 @@ export const checkIsLeftFromChat = (ctx: Context): boolean => {
 const getCallbackData = (ctx: Context): string =>
   (ctx.callbackQuery && ctx.callbackQuery.data) || 'Дивна відповідь'
 
-export const createAnswer = async (ctx: Context) => {
+const createRecord = (ctx: Context, dateInput: string | undefined) => {
   const data = getCallbackData(ctx)
 
-  const { userId } = getContextData(ctx)
-  const date = formatDate(new Date())
+  const date = dateInput ? dateInput : formatDate(new Date())
 
   const answer = data === Answer.NO ? false : true
   // Create a record body
@@ -32,6 +31,15 @@ export const createAnswer = async (ctx: Context) => {
     answer,
     date,
   }
+  return record
+}
+
+export const createAnswer = async (
+  ctx: Context,
+  dateInput?: string | undefined
+) => {
+  const { userId } = getContextData(ctx)
+  const record = createRecord(ctx, dateInput)
 
   // Save to DB
   await writeDataToDb(userId as number, record)
@@ -41,7 +49,7 @@ export const createAnswer = async (ctx: Context) => {
 const createMessage = (record: RecordModel): string => `Запис створено: 
 ${record.date} - ${record.answer ? 'Так, пив' : 'Ні, не пив'}`
 
-const formatDate = (date: Date): string => {
+export const formatDate = (date: Date): string => {
   const day = String(date.getDate()).padStart(2, '0')
   const month = String(date.getMonth() + 1).padStart(2, '0')
   const year = date.getFullYear()
