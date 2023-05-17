@@ -20,6 +20,10 @@ export const BUTTONS = {
     title: 'Новий запис',
     value: 'new_record',
   },
+  CHOOSE_DAY: {
+    title: 'Вибрати інший день',
+    value: 'choose_day'    
+  }
 }
 
 export const NEW_RECORD_ADDED = 'Новий запис створено'

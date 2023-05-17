@@ -5,8 +5,15 @@ import { Context } from 'grammy'
 import { postChat, removeChat } from './database/firebase'
 import { profanityFilter } from './features/profanityFilter'
 import { sendReminder } from './features/sendReminder'
-import { checkIsLeftFromChat, checkIsNewChat, getAllWords } from './utils'
 import { menuDrinksMiddleware } from './features/drinks/drink'
+import { updateCalendar } from './features/drinks/otherDay'
+import {
+  checkIsLeftFromChat,
+  checkIsNewChat,
+  createAnswer,
+  getAllWords,
+} from './utils'
+import { removePrevMessage } from './utils/botHelpers'
 
 // init translation
 i18next.use(backend).init({
@@ -56,12 +63,26 @@ bot.on('chat_join_request', ctx => {
 })
 
 // Message handler
-bot.on('message', async (ctx: Context) => {
+bot.on('message', async (ctx: Context, next) => {
+  const pattern = /^\d{2}-\d{2}-\d{4}$/
+  const text = ctx.message?.text
+  const chatId = ctx.update.message && ctx.update.message.chat.id
+
+  // Check if it's date
+  if (text && pattern.test(text)) {
+    if (chatId && chatId < 0) {
+      return await ctx.reply('Краще напиши свою дату у приватні повідомлення')
+    }
+
+    const answer = await createAnswer(ctx, text)
+    await ctx.reply(answer)
+    return menuDrinksMiddleware.replyToContext(ctx)
+  }
+
   // Adding to new chat
   const isNewChat = checkIsNewChat(ctx)
   if (isNewChat) {
     // Add chatId to db
-    const chatId = ctx.update.message && ctx.update.message.chat.id
     if (!chatId) return
     await postChat({ chatId })
 
@@ -89,7 +110,6 @@ bot.on('message', async (ctx: Context) => {
   // Removing from chat
   const isLeftFromChat = checkIsLeftFromChat(ctx)
   if (isLeftFromChat) {
-    const chatId = ctx.update.message && ctx.update.message.chat.id
     if (!chatId) return
     return removeChat({ chatId })
   }
@@ -118,18 +138,18 @@ bot.on('callback_query:data', async (ctx: Context, next) => {
   if (!ctx.callbackQuery) return
   console.log('another callbackQuery happened', ctx.callbackQuery.data)
 
-  if (ctx.callbackQuery.data === 'new_record') {
-    // Remove prev. message
-    const chatId =
-      ctx.callbackQuery.message && ctx.callbackQuery.message.chat.id
-    const messageId =
-      ctx.callbackQuery.message && ctx.callbackQuery.message.message_id
-    if (chatId && messageId) bot.api.deleteMessage(chatId, messageId)
-
-    return menuDrinksMiddleware.replyToContext(ctx)
+  switch (ctx.callbackQuery.data) {
+    case 'new_record':
+      // Remove prev. message
+      removePrevMessage(ctx)
+      return menuDrinksMiddleware.replyToContext(ctx)
+    case 'prev':
+    case 'next':
+      updateCalendar(ctx)
+      return menuDrinksMiddleware.replyToContext(ctx, '/new_record/choose_day/')
+    default:
+      return next()
   }
-
-  return next()
 })
 
 bot.catch(error => {

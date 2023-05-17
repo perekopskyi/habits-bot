@@ -4,6 +4,7 @@ import { BUTTONS, NEW_RECORD_ADDED } from '../../utils/constants'
 import { createAnswer } from '../../utils'
 import { store } from '../../utils/store'
 import { startMenuText } from './drink'
+import { handleDayMenu } from './choose_day'
 
 export const secondMenu = new MenuTemplate<Context>('Пив сьогодні?')
 
@@ -32,13 +33,13 @@ secondMenu.interact(BUTTONS.YES.title, BUTTONS.YES.value, {
   },
 })
 
-// TODO add button
-// secondMenu.interact('Вибрати інший день', 'choose_day', {
-//   do: async ctx => {
-//     console.log('🚀 ~> Вибрати інший день:')
-//     await ctx.answerCallbackQuery('yaay')
-//     return false
-//   },
-// })
+secondMenu.submenu(
+  BUTTONS.CHOOSE_DAY.title,
+  BUTTONS.CHOOSE_DAY.value,
+  handleDayMenu,
+  {
+    hide: () => false,
+  }
+)
 
 secondMenu.manualRow(createBackMainMenuButtons())
