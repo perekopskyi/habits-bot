@@ -12,7 +12,12 @@ export const getContextData = (ctx: Context) => {
   const message =
     ctx.message && ctx.message.text && ctx.message.text.toLowerCase()
 
+  const chatId = ctx.msg?.chat.id
+  const isPublicChat = chatId && chatId < 0
+
   return {
+    chatId,
+    isPublicChat,
     message,
     userId: ctx.message && ctx.message.from.id,
   }

@@ -14,6 +14,7 @@ import {
   getAllWords,
 } from './utils'
 import { removePrevMessage } from './utils/botHelpers'
+import { getContextData } from './utils/getDataFromContext'
 
 // init translation
 i18next.use(backend).init({
@@ -127,8 +128,12 @@ bot.on('message', async (ctx: Context, next) => {
   }
 
   try {
-    console.log('Что-то пишет')
-    ctx.reply('Натисни /start щоб побачити меню')
+    // Not triggered in public chat
+    const { isPublicChat } = getContextData(ctx)
+    if (isPublicChat) return
+
+    console.log('Personal message', ctx.msg)
+    ctx.reply('Я тебе не розумію\nНатисни /start щоб побачити меню')
   } catch (error) {
     console.log('🚀 ~>ctx.reply error:', error)
   }
