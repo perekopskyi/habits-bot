@@ -3,11 +3,13 @@ version: '3'
 services:
   app:
     build:
-      context: .
-    restart: always
+      context: ./
+    container_name: habits-bot
+    command: npm run start
+    restart: unless-stopped
     environment:
       NODE_ENV: production
     ports:
-      - "4000:4000"
+      - '4000:4000'
     env_file:
       - .env.production
