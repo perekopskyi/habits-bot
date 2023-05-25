@@ -8,3 +8,7 @@ RUN npm install
 RUN npm install --save-dev @tsconfig/node16
 
 COPY . .
+
+RUN npm run build
+
+COPY ./src/locales ./dist/locales
