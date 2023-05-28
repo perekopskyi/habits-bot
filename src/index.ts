@@ -2,11 +2,12 @@ import { bot } from './botInstance'
 import i18next from 'i18next'
 import backend from 'i18next-node-fs-backend'
 import { Context } from 'grammy'
-import { postChat, removeChat } from './database/firebase'
+import { postChat, postChatV2, removeChat } from './database/firebase'
 import './features/cron'
 import { profanityFilter } from './features/profanityFilter'
 import { sendReminder } from './features/sendReminder'
 import { menuDrinksMiddleware } from './features/drinks/drink'
+import { getStats } from './features/stats/getStats'
 // import { updateCalendar } from './features/drinks/otherDay'
 import {
   checkIsLeftFromChat,
@@ -49,14 +50,14 @@ const startConversation = async (ctx: Context) => {
   const chatId = ctx.update.message && ctx.update.message.chat.id
   if (!chatId) return
   await postChat({ chatId })
+
+  const user = ctx.msg?.chat
+  await postChatV2(user)
   menuDrinksMiddleware.replyToContext(ctx)
 }
 bot.command('start', startConversation)
 
-bot.command('stats', ctx => {
-  // TODO statistics
-  return ctx.reply('Stats')
-})
+bot.command('stats', getStats)
 
 bot.command('remind', sendReminder)
 
@@ -115,10 +116,6 @@ bot.on('message', async (ctx: Context, next) => {
     if (!chatId) return
     return removeChat({ chatId })
   }
-
-  const createdChat =
-    ctx.update.message && ctx.update.message.group_chat_created
-  console.log('🚀 ~> createdChat:', createdChat)
 
   // Check profanity
   const answer = await profanityFilter(ctx)

@@ -67,6 +67,27 @@ export const postChat = async (chat: ChatModel) => {
   return update(dbRef, { '/chats': updatedChats })
 }
 
+// UserID equal to Personal Chat ID
+export const postChatV2 = async (user: any) => {
+  const snapshot = await get(child(dbRef, `users`))
+  const allUsers = snapshot.exists() && snapshot.val()
+
+  if (!allUsers) return update(dbRef, { '/users': { [user.id]: user } })
+
+  const hasAlreadyExistedUser = Object.keys(allUsers).some(
+    (id: string) => Number(id) === user.id
+  )
+
+  if (hasAlreadyExistedUser) return // Do nothing
+
+  const updatedUsers = {
+    ...allUsers,
+    [user.id]: user,
+  }
+
+  return update(dbRef, { '/users': updatedUsers })
+}
+
 export const removeChat = async (chat: ChatModel) => {
   const snapshot = await get(child(dbRef, `chats`))
   const updates: ChatModel[] = snapshot.exists()
@@ -92,6 +113,7 @@ const getDBData = async (key: string) => {
 
 export const getChats = () => getDBData('chats')
 export const getRecords = () => getDBData('records')
+export const getUsers = () => getDBData('users')
 
 // For backups
 export const getAllDBData = async () => {
