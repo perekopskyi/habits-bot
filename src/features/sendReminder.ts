@@ -2,6 +2,8 @@ import { bot } from '../botInstance'
 import { getChats } from '../database/firebase'
 
 export const sendReminder = async () => {
+  console.log('sendedReminder:', new Date().toUTCString())
+
   try {
     const uniqueChatIds = await getChats()
 
