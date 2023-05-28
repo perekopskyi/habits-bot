@@ -3,9 +3,8 @@ export enum Answer {
   NO = '/new_record/nope',
 }
 
-export const START_MENU_MESSAGE: string =
+export const getStartMessage = (): string =>
   'Здоров, Пивозавр! \nЗараз: ' + new Date().toLocaleString('UA-ua')
-
 
 export const BUTTONS = {
   NOPE: {
@@ -22,8 +21,8 @@ export const BUTTONS = {
   },
   CHOOSE_DAY: {
     title: 'Вибрати інший день',
-    value: 'choose_day'    
-  }
+    value: 'choose_day',
+  },
 }
 
 export const NEW_RECORD_ADDED = 'Новий запис створено'

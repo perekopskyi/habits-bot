@@ -1,6 +1,6 @@
 import { Context } from 'grammy'
 import { MenuMiddleware, MenuTemplate } from 'grammy-inline-menu'
-import { NEW_RECORD_ADDED, START_MENU_MESSAGE } from '../../utils/constants'
+import { NEW_RECORD_ADDED, getStartMessage } from '../../utils/constants'
 import { secondMenu } from './secondMenu'
 import { store } from '../../utils/store'
 import { BUTTONS } from '../../utils/constants'
@@ -8,7 +8,7 @@ import { BUTTONS } from '../../utils/constants'
 export const startMenuText = (ctx: Context) => {
   // TODO Check if it's first touch
 
-  if (!ctx.callbackQuery) return START_MENU_MESSAGE
+  if (!ctx.callbackQuery) return getStartMessage()
 
   const data = ctx.callbackQuery.data
   switch (data) {
@@ -19,7 +19,7 @@ export const startMenuText = (ctx: Context) => {
       return store.message
 
     default:
-      return START_MENU_MESSAGE
+      return getStartMessage()
   }
 }
 
