@@ -3,8 +3,21 @@ export enum Answer {
   NO = '/new_record/nope',
 }
 
+const getCurrentDateTime = () =>
+  new Date()
+    .toLocaleString('uk-UA', {
+      timeZone: 'Europe/Kiev',
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+    })
+    .replace(',', '')
+
 export const getStartMessage = (): string =>
-  'Здоров, Пивозавр! \nЗараз: ' + new Date().toLocaleString('UA-ua')
+  'Здоров, Пивозавр! \nЗараз: ' + getCurrentDateTime()
 
 export const BUTTONS = {
   NOPE: {
