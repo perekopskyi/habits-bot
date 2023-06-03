@@ -4,6 +4,9 @@ import { getChats } from '../database/firebase'
 export const sendReminder = async () => {
   console.log('sendedReminder:', new Date().toUTCString())
 
+  const directButton = { text: 'Поїхали!', callback_data: 'new_record' }
+  const chatButton = { ...directButton, url: 'https://t.me/PivozavrThe_bot' }
+
   try {
     const uniqueChatIds = await getChats()
 
@@ -12,45 +15,16 @@ export const sendReminder = async () => {
       const greeting = !isDirectChat ? 'Здоров, пивозаври!' : 'Здоров!'
 
       // Case for direct chat
-      if (isDirectChat) {
-        bot.api.sendMessage(
-          chatId,
-          `${greeting} 
+      bot.api.sendMessage(
+        chatId,
+        `${greeting} 
 Нагадування внести данні`,
-          {
-            reply_markup: {
-              inline_keyboard: [
-                [
-                  {
-                    text: 'Поїхали!',
-                    callback_data: 'new_record',
-                  },
-                ],
-              ],
-            },
-          }
-        )
-      } else {
-        // Отправляем сообщение с кнопками
-        bot.api.sendMessage(
-          chatId,
-          `${greeting} 
-Нагадування внести данні`,
-          {
-            reply_markup: {
-              inline_keyboard: [
-                [
-                  {
-                    text: 'Поїхали!',
-                    callback_data: 'new_record',
-                    url: 'https://t.me/PivozavrThe_bot',
-                  },
-                ],
-              ],
-            },
-          }
-        )
-      }
+        {
+          reply_markup: {
+            inline_keyboard: [[isDirectChat ? directButton : chatButton]],
+          },
+        }
+      )
     }
   } catch (error) {
     console.log('sendReminder error:', error)
