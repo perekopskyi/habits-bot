@@ -2,6 +2,7 @@ import { Context } from 'grammy'
 import { MenuTemplate, createBackMainMenuButtons } from 'grammy-inline-menu'
 import { BUTTONS, NEW_RECORD_ADDED } from '../../utils/constants'
 import { createAnswer } from '../../utils'
+import { getYesterday } from '../../utils/dates'
 import { store } from '../../utils/store'
 import { startMenuText } from './drink'
 import { handleDayMenu } from './choose_day'
@@ -32,6 +33,20 @@ secondMenu.interact(BUTTONS.YES.title, BUTTONS.YES.value, {
     return '..'
   },
 })
+
+secondMenu.interact(
+  BUTTONS.DRINK_YESTERDAY.title,
+  BUTTONS.DRINK_YESTERDAY.value,
+  {
+    do: async ctx => {
+      const yesterday = getYesterday()
+      store.message = await createAnswer(ctx, yesterday)
+      await ctx.answerCallbackQuery(NEW_RECORD_ADDED)
+      startMenuText(ctx)
+      return '..'
+    },
+  }
+)
 
 secondMenu.submenu(
   BUTTONS.CHOOSE_DAY.title,

@@ -17,25 +17,29 @@ const getCurrentDateTime = () =>
     .replace(',', '')
 
 export const getStartMessage = (): string =>
-  'Здоров, Пивозавр! \nЗараз: ' + getCurrentDateTime()
+  '👋 Здоров, Пивозавр! \n🕰Зараз: ' + getCurrentDateTime()
 
 export const BUTTONS = {
   NOPE: {
-    title: 'Ні',
+    title: '😕 Ні',
     value: 'nope',
   },
   YES: {
-    title: 'Так',
+    title: '🍺 Так',
     value: 'yes',
   },
+  DRINK_YESTERDAY: {
+    title: '🍻 Пив вчора',
+    value: 'drink_yesterday',
+  },
   NEW_RECORD: {
-    title: 'Новий запис',
+    title: '📝 Новий запис',
     value: 'new_record',
   },
   CHOOSE_DAY: {
-    title: 'Вибрати інший день',
+    title: '🗓 Вибрати інший день',
     value: 'choose_day',
   },
 }
 
-export const NEW_RECORD_ADDED = 'Новий запис створено'
+export const NEW_RECORD_ADDED = '🧾 Новий запис створено'

@@ -1,9 +1,13 @@
 import { Context } from 'grammy'
 import { MenuMiddleware, MenuTemplate } from 'grammy-inline-menu'
-import { NEW_RECORD_ADDED, getStartMessage } from '../../utils/constants'
-import { secondMenu } from './secondMenu'
+import {
+  Answer,
+  BUTTONS,
+  NEW_RECORD_ADDED,
+  getStartMessage,
+} from '../../utils/constants'
 import { store } from '../../utils/store'
-import { BUTTONS } from '../../utils/constants'
+import { secondMenu } from './secondMenu'
 
 export const startMenuText = (ctx: Context) => {
   // TODO Check if it's first touch
@@ -11,10 +15,15 @@ export const startMenuText = (ctx: Context) => {
   if (!ctx.callbackQuery) return getStartMessage()
 
   const data = ctx.callbackQuery.data
+
+  const { NEW_RECORD, DRINK_YESTERDAY } = BUTTONS
+
   switch (data) {
-    case '/new_record/yes':
+    case Answer.YES:
       return store.message || NEW_RECORD_ADDED
-    case '/new_record/nope':
+
+    case Answer.NO:
+    case `${NEW_RECORD.value}/${DRINK_YESTERDAY.value}`:
       console.log('CASE /new_record/nope')
       return store.message
 
