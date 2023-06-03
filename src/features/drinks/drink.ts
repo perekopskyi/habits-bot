@@ -20,10 +20,10 @@ export const startMenuText = (ctx: Context) => {
 
   switch (data) {
     case Answer.YES:
+    case `/${NEW_RECORD.value}/${DRINK_YESTERDAY.value}`:
       return store.message || NEW_RECORD_ADDED
 
     case Answer.NO:
-    case `${NEW_RECORD.value}/${DRINK_YESTERDAY.value}`:
       console.log('CASE /new_record/nope')
       return store.message
 
