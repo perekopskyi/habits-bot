@@ -33,7 +33,7 @@ export const BUTTONS = {
     value: 'yes',
   },
   DRINK_YESTERDAY: {
-    title: '🍻 Пив вчора',
+    title: '🍻 Пив учора',
     value: 'drink_yesterday',
   },
   NEW_RECORD: {
