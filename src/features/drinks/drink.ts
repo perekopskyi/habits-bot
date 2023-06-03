@@ -8,6 +8,7 @@ import {
 } from '../../utils/constants'
 import { store } from '../../utils/store'
 import { secondMenu } from './secondMenu'
+import { statsMenu } from '../stats/statsMenu'
 
 export const startMenuText = (ctx: Context) => {
   // TODO Check if it's first touch
@@ -40,6 +41,8 @@ startMenu.submenu(
   BUTTONS.NEW_RECORD.value,
   secondMenu
 )
+
+startMenu.submenu(BUTTONS.STATS.title, BUTTONS.STATS.value, statsMenu)
 
 export const menuDrinksMiddleware = new MenuMiddleware('/', startMenu)
 console.log(menuDrinksMiddleware.tree())

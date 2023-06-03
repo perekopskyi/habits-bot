@@ -28,23 +28,41 @@ const DAYS_OF_WEEK = ['ПН', 'ВТ', 'СР', 'ЧТ', 'ПТ', 'СБ', 'ВС']
 
 function getFormattedDates(startDate: Date): string[] {
   const formattedDates: string[] = []
-  const oneDay = 24 * 60 * 60 * 1000
 
   for (let i = 0; i < 7; i++) {
-    const date = new Date(startDate.getTime() - i * oneDay)
-    const formattedDate = formatDate(date) // Implement this function to format the date as 'dd-mm-yyyy'
+    const date = new Date(startDate)
+    date.setDate(startDate.getDate() + i)
+    const formattedDate = formatDate(date)
     formattedDates.push(formattedDate)
   }
 
-  return formattedDates.reverse()
+  return formattedDates
+}
+
+const getMonday = (): Date => {
+  const today = new Date()
+
+  // Get the current day of the week (0-6, where Sunday is 0)
+  const dayOfWeek = today.getDay()
+
+  // Calculate the date of the Monday before today
+  const mondayBeforeToday = new Date(
+    today.setDate(today.getDate() - ((dayOfWeek + 6) % 7))
+  )
+
+  return dayOfWeek === 1
+    ? /* Previous Monday */ new Date(
+        mondayBeforeToday.setDate(mondayBeforeToday.getDate() - 7)
+      )
+    : mondayBeforeToday
 }
 
 function getPastWeekDates() {
-  const today = new Date()
   const pastWeekDates: string[] = []
   const pastWeekDatesWithDays: any = {}
 
-  const formattedDates = getFormattedDates(today)
+  const startDate = getMonday()
+  const formattedDates = getFormattedDates(startDate)
 
   for (let i = 0; i < 7; i++) {
     const formattedDate = formattedDates[i]

@@ -20,6 +20,10 @@ export const getStartMessage = (): string =>
   '👋 Здоров, Пивозавр! \n🕰Зараз: ' + getCurrentDateTime()
 
 export const BUTTONS = {
+  STATS: {
+    title: '📊 Моя статистика',
+    value: 'my_statistic',
+  },
   NOPE: {
     title: '😕 Ні',
     value: 'nope',
@@ -43,3 +47,4 @@ export const BUTTONS = {
 }
 
 export const NEW_RECORD_ADDED = '🧾 Новий запис створено'
+export const BETTER_TO_PRIVATE_CHAT = 'Краще напиши у приватні повідомлення'

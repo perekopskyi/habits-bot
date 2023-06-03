@@ -8,6 +8,7 @@ import { profanityFilter } from './features/profanityFilter'
 import { sendReminder } from './features/sendReminder'
 import { menuDrinksMiddleware } from './features/drinks/drink'
 import { getStats } from './features/stats/getStats'
+import { sendUpdatesMessage } from './features/sendUpdatesMessage'
 // import { updateCalendar } from './features/drinks/otherDay'
 import {
   checkIsLeftFromChat,
@@ -17,6 +18,7 @@ import {
 } from './utils'
 import { removePrevMessage } from './utils/botHelpers'
 import { getContextData } from './utils/getDataFromContext'
+import { BETTER_TO_PRIVATE_CHAT } from './utils/constants'
 
 // init translation
 i18next.use(backend).init({
@@ -58,7 +60,7 @@ const startConversation = async (ctx: Context) => {
 bot.command('start', startConversation)
 
 bot.command('stats', getStats)
-
+bot.command('updates', sendUpdatesMessage)
 bot.command('remind', sendReminder)
 
 bot.on('chat_join_request', ctx => {
@@ -74,7 +76,7 @@ bot.on('message', async (ctx: Context, next) => {
   // Check if it's date
   if (text && pattern.test(text)) {
     if (chatId && chatId < 0) {
-      return await ctx.reply('Краще напиши свою дату у приватні повідомлення')
+      return await ctx.reply(BETTER_TO_PRIVATE_CHAT)
     }
 
     const answer = await createAnswer(ctx, text)
