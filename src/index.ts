@@ -9,7 +9,6 @@ import { profanityFilter } from './features/profanityFilter'
 import { sendReminder } from './features/sendReminder'
 import { menuDrinksMiddleware } from './features/drinks/drink'
 import { getStats } from './features/stats/getStats'
-import { sendUpdatesMessage } from './features/sendUpdatesMessage'
 // import { updateCalendar } from './features/drinks/otherDay'
 import {
   checkIsLeftFromChat,
@@ -61,7 +60,6 @@ const startConversation = async (ctx: Context) => {
 bot.command('start', startConversation)
 
 bot.command('stats', getStats)
-bot.command('updates', sendUpdatesMessage)
 bot.command('remind', sendReminder)
 
 bot.on('chat_join_request', ctx => {
