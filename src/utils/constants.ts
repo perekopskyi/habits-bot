@@ -48,3 +48,10 @@ export const BUTTONS = {
 
 export const NEW_RECORD_ADDED = '🧾 Новий запис створено'
 export const BETTER_TO_PRIVATE_CHAT = 'Краще напиши у приватні повідомлення'
+
+export const MEDALS: { [key: number]: string } = {
+  1: '🥇',
+  2: '🥈',
+  3: '🥉',
+  4: '🍺',
+}

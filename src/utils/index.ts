@@ -60,3 +60,10 @@ export const getAllWords = (key: string): string => {
     )
     .join('|')
 }
+
+type User = {
+  first_name: string
+  last_name: string | undefined
+}
+export const createFullName = ({ first_name = '', last_name }: User) =>
+  last_name ? `${first_name} ${last_name}` : first_name
