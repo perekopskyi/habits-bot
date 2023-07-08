@@ -28,7 +28,7 @@ export const getStats = async (ctx: Context) => {
       const message = generateMessage(fullName, statsData)
       ctx.reply(message)
     } catch (error) {
-      ctx.reply('Дивний аккаунт')
+      // ctx.reply('Дивний аккаунт')
       console.error(error)
     }
   })

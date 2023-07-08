@@ -6,7 +6,7 @@ import './commands'
 import { postChat, postChatV2, removeChat } from './database/firebase'
 import './features/cron'
 import { profanityFilter } from './features/profanityFilter'
-import { sendReminder } from './features/sendReminder'
+import { sendReminder, sendWeeklyReminder } from './features/sendReminder'
 import { menuDrinksMiddleware } from './features/drinks/drink'
 import { getStats } from './features/stats/getStats'
 // import { updateCalendar } from './features/drinks/otherDay'
@@ -58,9 +58,9 @@ const startConversation = async (ctx: Context) => {
   menuDrinksMiddleware.replyToContext(ctx)
 }
 bot.command('start', startConversation)
-
 bot.command('stats', getStats)
 bot.command('remind', sendReminder)
+bot.command('weeklyRemind', sendWeeklyReminder)
 
 bot.on('chat_join_request', ctx => {
   console.log('🚀 ~> chat_join_request ctx:', ctx)

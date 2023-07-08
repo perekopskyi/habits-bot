@@ -1,12 +1,13 @@
 import { bot } from '../botInstance'
 import { getChats } from '../database/firebase'
+import { formatDate } from '../utils'
 
-const VERSION = '1.0.9'
+const VERSION = '1.1.0'
 const UPDATES = `
 В цьому оновленні:
-- Додано можливість переглянути лідерів алко-гонки (за весь час)
-`
+🔹 Виправлено логіку з нагадуваннями: Тепер щоденні нагадування будуть приходити тільки у приватні повідомлення, та було додано одне щотижневе нагадування для групп пивозаврів
 
+`
 export const sendUpdatesMessage = async () => {
   console.log('sendUpdatesMessage:', new Date().toUTCString())
 
@@ -15,9 +16,9 @@ export const sendUpdatesMessage = async () => {
 
     for (const chatId of uniqueChatIds) {
       const isDirectChat = chatId > 0
-      const message = `Зустрічай${isDirectChat ? 'те' : ''} оновлення!
+      const message = `Зустрічай${isDirectChat ? 'те' : ''} #оновлення!
 
-Версія: ${VERSION}
+Версія: ${VERSION} (${formatDate(new Date())})
 ${UPDATES}`
       // Case for direct chat
       bot.api.sendMessage(chatId, message)
